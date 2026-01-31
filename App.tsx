@@ -1,25 +1,30 @@
 
 import React, { useState, useEffect } from 'react';
-import { Heart, MapPin, Calendar, Users, Send, MessageCircle, Star, CheckCircle2, MailCheck } from 'lucide-react';
+import { Heart, MapPin, Calendar, Users, Send, MessageCircle, Star, Quote } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Countdown from './components/Countdown';
 import { geminiService } from './services/geminiService';
 
 const WEDDING_DATE = "2026-03-24T08:00:00";
 const BRIDE_NAME = "Rizki Rahma Kurnia, A.Md Ftr";
-const GROOM_NAME = "Hinka S.Sos";
+const GROOM_NAME = "Hinka S.s";
 const MAPS_URL = "https://maps.app.goo.gl/FkoSv91khJDpf3ww8";
-// Email tujuan diperbarui sesuai permintaan
-const RECIPIENT_EMAIL = "a002041zano@gmail.com"; 
+
+// DAFTAR UCAPAN PERMANEN (Dikosongkan total agar tampilan bersih)
+const INITIAL_WISHES: any[] = [];
 
 const App: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [newWish, setNewWish] = useState({ name: '', message: '', status: 'Hadir' as 'Hadir' | 'Tidak Hadir' });
+  const [wishes, setWishes] = useState<any[]>(INITIAL_WISHES);
   const [aiPoem, setAiPoem] = useState<string>("");
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isSent, setIsSent] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
 
   useEffect(() => {
+    // Menghapus pengambilan data dari localStorage agar benar-benar kosong sesuai permintaan
+    setWishes(INITIAL_WISHES);
+
     const fetchPoem = async () => {
       const poem = await geminiService.generateRomanticPoem(BRIDE_NAME, GROOM_NAME);
       setAiPoem(poem);
@@ -31,41 +36,23 @@ const App: React.FC = () => {
     setIsOpen(true);
   };
 
-  const submitWish = async (e: React.FormEvent) => {
+  const submitWish = (e: React.FormEvent) => {
     e.preventDefault();
     if (!newWish.name || !newWish.message) return;
+    
     setIsSubmitting(true);
     
-    try {
-      // Menggunakan FormSubmit.co untuk mengirim data ke email tanpa database
-      const response = await fetch(`https://formsubmit.co/ajax/${RECIPIENT_EMAIL}`, {
-        method: "POST",
-        headers: { 
-            'Content-Type': 'application/json',
-            'Accept': 'application/json'
-        },
-        body: JSON.stringify({
-          Nama: newWish.name,
-          Status_Kehadiran: newWish.status,
-          Pesan_Doa: newWish.message,
-          _subject: `RSVP Undangan: ${newWish.name} (${newWish.status})`,
-          _template: "table",
-          _captcha: "false"
-        })
-      });
-
-      if (response.ok) {
-        setIsSent(true);
-        setNewWish({ name: '', message: '', status: 'Hadir' });
-      } else {
-        alert("Terjadi kesalahan saat mengirim. Silakan coba lagi.");
-      }
-    } catch (error) {
-      console.error("Error sending email:", error);
-      alert("Gagal mengirim ucapan. Pastikan koneksi internet Anda aktif.");
-    } finally {
+    // Simulasi penambahan ucapan ke state (hanya sementara di sesi ini)
+    setTimeout(() => {
+      const wishToAdd = { ...newWish };
+      setWishes([wishToAdd, ...wishes]);
+      
+      setNewWish({ name: '', message: '', status: 'Hadir' });
       setIsSubmitting(false);
-    }
+      setShowSuccess(true);
+      
+      setTimeout(() => setShowSuccess(false), 3000);
+    }, 800);
   };
 
   const copyToClipboard = (text: string) => {
@@ -101,7 +88,7 @@ const App: React.FC = () => {
               transition={{ delay: 0.8 }}
               className="text-5xl md:text-7xl font-cursive mb-6"
             >
-              Rizki & Hinka
+              Kiki & Hinka
             </motion.h1>
             <motion.div
               initial={{ opacity: 0 }}
@@ -137,7 +124,7 @@ const App: React.FC = () => {
             </div>
             <div className="z-10 text-center px-4">
               <span className="text-sm uppercase tracking-[0.4em] text-[#a68b5a] mb-6 block">The Wedding Celebration</span>
-              <h2 className="text-5xl md:text-8xl font-cursive text-[#4a4a4a] mb-8">Rizki & Hinka</h2>
+              <h2 className="text-5xl md:text-8xl font-cursive text-[#4a4a4a] mb-8">Kiki & Hinka</h2>
               <div className="h-[1px] w-24 bg-[#a68b5a] mx-auto mb-8"></div>
               <p className="font-serif text-xl md:text-2xl text-[#6b6b6b] mb-12">Selasa, 24 Maret 2026</p>
               <Countdown targetDate={WEDDING_DATE} />
@@ -149,7 +136,7 @@ const App: React.FC = () => {
             <Heart className="mx-auto text-[#a68b5a] mb-6 fill-[#a68b5a]/10" size={32} />
             <div className="mb-12">
                <p className="font-serif text-lg italic text-[#6b6b6b] leading-relaxed whitespace-pre-line px-4">
-                 {aiPoem || "Dua hati satu janji, melangkah bersama dalam ridho Ilahi."}
+                 {aiPoem || "Dua hati satu janji, melangkah bersama dalam naungan restu Ilahi."}
                </p>
             </div>
             <div className="h-[1px] w-48 bg-gradient-to-r from-transparent via-[#a68b5a] to-transparent mx-auto"></div>
@@ -238,111 +225,109 @@ const App: React.FC = () => {
             </div>
           </section>
 
-          {/* RSVP Section (Via Email) */}
+          {/* Guest Book Section */}
           <section className="py-24 px-6 bg-white">
-            <div className="max-w-2xl mx-auto">
+            <div className="max-w-4xl mx-auto">
               <div className="text-center mb-16">
                 <MessageCircle className="mx-auto text-[#a68b5a] mb-4" size={32} />
                 <h2 className="text-4xl font-cursive text-[#a68b5a]">Ucapan & Doa Restu</h2>
-                <p className="text-[#6b6b6b] mt-2">Kirimkan doa restu dan konfirmasi kehadiran langsung ke email kami</p>
+                <p className="text-[#6b6b6b] mt-2">Tuliskan pesan bahagia Anda untuk kedua mempelai</p>
               </div>
 
-              <div className="relative">
-                <AnimatePresence mode="wait">
-                  {!isSent ? (
-                    <motion.form 
-                      key="form"
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      exit={{ opacity: 0 }}
-                      onSubmit={submitWish} 
-                      className="bg-[#fdfbf7] p-8 rounded-3xl shadow-inner border border-[#a68b5a]/10"
-                    >
-                      <div className="mb-6">
-                        <label className="block text-sm font-medium text-[#4a4a4a] mb-2">Nama Lengkap</label>
-                        <input 
-                          type="text" 
-                          required
-                          value={newWish.name}
-                          onChange={(e) => setNewWish({...newWish, name: e.target.value})}
-                          className="w-full px-4 py-3 rounded-xl border border-[#a68b5a]/20 focus:outline-none focus:ring-2 focus:ring-[#a68b5a]/50" 
-                          placeholder="Masukkan nama Anda" 
-                        />
-                      </div>
-                      <div className="mb-6">
-                        <label className="block text-sm font-medium text-[#4a4a4a] mb-2">Kehadiran</label>
-                        <select 
-                          value={newWish.status}
-                          onChange={(e) => setNewWish({...newWish, status: e.target.value as any})}
-                          className="w-full px-4 py-3 rounded-xl border border-[#a68b5a]/20 focus:outline-none focus:ring-2 focus:ring-[#a68b5a]/50 bg-white"
-                        >
-                          <option value="Hadir">Hadir</option>
-                          <option value="Tidak Hadir">Tidak Hadir</option>
-                        </select>
-                      </div>
-                      <div className="mb-8">
-                        <label className="block text-sm font-medium text-[#4a4a4a] mb-2">Ucapan & Doa</label>
-                        <textarea 
-                          required
-                          value={newWish.message}
-                          onChange={(e) => setNewWish({...newWish, message: e.target.value})}
-                          className="w-full px-4 py-3 rounded-xl border border-[#a68b5a]/20 h-32 focus:outline-none focus:ring-2 focus:ring-[#a68b5a]/50" 
-                          placeholder="Tuliskan doa restu Anda..."
-                        ></textarea>
-                      </div>
-                      <button 
-                        disabled={isSubmitting}
-                        className="w-full bg-[#a68b5a] text-white py-4 rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-[#8e764d] transition-all shadow-lg disabled:opacity-50"
+              <div className="grid md:grid-cols-5 gap-12">
+                {/* Form area */}
+                <div className="md:col-span-2">
+                  <form onSubmit={submitWish} className="bg-[#fdfbf7] p-6 rounded-3xl shadow-inner sticky top-24 border border-[#a68b5a]/10">
+                    <div className="mb-4">
+                      <label className="block text-xs font-bold uppercase tracking-widest text-[#a68b5a] mb-2">Nama</label>
+                      <input 
+                        type="text" 
+                        required
+                        value={newWish.name}
+                        onChange={(e) => setNewWish({...newWish, name: e.target.value})}
+                        className="w-full px-4 py-3 rounded-xl border border-[#a68b5a]/10 focus:outline-none focus:ring-1 focus:ring-[#a68b5a] bg-white text-sm" 
+                        placeholder="Nama Anda" 
+                      />
+                    </div>
+                    <div className="mb-4">
+                      <label className="block text-xs font-bold uppercase tracking-widest text-[#a68b5a] mb-2">Kehadiran</label>
+                      <select 
+                        value={newWish.status}
+                        onChange={(e) => setNewWish({...newWish, status: e.target.value as any})}
+                        className="w-full px-4 py-3 rounded-xl border border-[#a68b5a]/10 focus:outline-none focus:ring-1 focus:ring-[#a68b5a] bg-white text-sm"
                       >
-                        {isSubmitting ? (
-                          <div className="flex items-center gap-2">
-                             <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                             Mengirim...
-                          </div>
-                        ) : (
-                          <>
-                            <Send size={18} />
-                            Kirim Ucapan via Email
-                          </>
-                        )}
-                      </button>
-                      <p className="text-[10px] text-center text-[#8b8b8b] mt-4 italic">
-                        *Ucapan akan dikirimkan secara pribadi ke email mempelai.
-                      </p>
-                    </motion.form>
-                  ) : (
-                    <motion.div 
-                      key="success"
-                      initial={{ scale: 0.9, opacity: 0 }}
-                      animate={{ scale: 1, opacity: 1 }}
-                      className="bg-green-50 p-12 rounded-3xl border border-green-200 text-center shadow-inner"
+                        <option value="Hadir">Hadir</option>
+                        <option value="Tidak Hadir">Tidak Hadir</option>
+                      </select>
+                    </div>
+                    <div className="mb-6">
+                      <label className="block text-xs font-bold uppercase tracking-widest text-[#a68b5a] mb-2">Pesan</label>
+                      <textarea 
+                        required
+                        value={newWish.message}
+                        onChange={(e) => setNewWish({...newWish, message: e.target.value})}
+                        className="w-full px-4 py-3 rounded-xl border border-[#a68b5a]/10 h-24 focus:outline-none focus:ring-1 focus:ring-[#a68b5a] bg-white text-sm" 
+                        placeholder="Doa & Harapan..."
+                      ></textarea>
+                    </div>
+                    <button 
+                      type="submit"
+                      disabled={isSubmitting}
+                      className="w-full bg-[#a68b5a] text-white py-3 rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-[#8e764d] transition-all"
                     >
-                      <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6 text-green-600">
-                        <MailCheck size={48} />
+                      {isSubmitting ? "Mengirim..." : <><Send size={16} /> Kirim Ucapan</>}
+                    </button>
+                    {showSuccess && (
+                      <p className="text-green-600 text-[10px] text-center mt-2 font-bold animate-pulse">Ucapan berhasil ditambahkan!</p>
+                    )}
+                  </form>
+                </div>
+
+                {/* List area (Dinding Ucapan) */}
+                <div className="md:col-span-3">
+                  <div className="max-h-[500px] overflow-y-auto pr-4 custom-scrollbar">
+                    {wishes.length > 0 ? (
+                      <div className="space-y-4">
+                        {wishes.map((wish, idx) => (
+                          <motion.div 
+                            key={idx}
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            className="bg-white p-5 rounded-2xl border border-[#a68b5a]/5 shadow-sm relative"
+                          >
+                            <div className="flex justify-between items-start mb-2">
+                              <h5 className="font-bold text-[#4a4a4a] text-sm">{wish.name}</h5>
+                              <span className={`text-[10px] px-2 py-0.5 rounded-full ${wish.status === 'Hadir' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
+                                {wish.status}
+                              </span>
+                            </div>
+                            <p className="text-[#6b6b6b] text-xs italic leading-relaxed">
+                              "{wish.message}"
+                            </p>
+                            <Quote className="absolute bottom-2 right-2 text-[#a68b5a]/10" size={32} />
+                          </motion.div>
+                        ))}
                       </div>
-                      <h3 className="text-2xl font-serif font-bold text-green-800 mb-2">Terima Kasih!</h3>
-                      <p className="text-green-700">Doa restu Anda telah berhasil kami terima via email. Kehadiran dan doa Anda sangat berarti bagi kami.</p>
-                      <button 
-                        onClick={() => setIsSent(false)}
-                        className="mt-8 text-sm text-green-600 underline hover:text-green-800"
-                      >
-                        Kirim ucapan lain
-                      </button>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
+                    ) : (
+                      <div className="flex flex-col items-center justify-center h-full text-[#8b8b8b] italic py-20 bg-white/30 rounded-3xl border border-dashed border-[#a68b5a]/20">
+                        <MessageCircle size={40} className="mb-4 opacity-20" />
+                        <p className="text-sm">Belum ada ucapan. Jadilah yang pertama!</p>
+                      </div>
+                    )}
+                  </div>
+                </div>
               </div>
             </div>
           </section>
 
           {/* Gift Section */}
-          <section className="py-24 px-6 bg-white text-center">
+          <section className="py-24 px-6 bg-[#fdfbf7] text-center">
              <div className="max-w-2xl mx-auto">
                 <Star className="mx-auto text-[#a68b5a] mb-6" size={32} />
                 <h2 className="text-3xl font-serif text-[#4a4a4a] mb-8">Kado Digital</h2>
                 <p className="text-[#6b6b6b] mb-12">Doa restu Anda merupakan karunia yang sangat berarti bagi kami. Namun jika Anda ingin memberikan tanda kasih, dapat melalui:</p>
                 <div className="grid gap-6">
-                   <div className="bg-[#fdfbf7] p-8 rounded-3xl border border-[#a68b5a]/10 flex flex-col items-center">
+                   <div className="bg-white p-8 rounded-3xl border border-[#a68b5a]/10 flex flex-col items-center shadow-sm">
                       <p className="font-bold text-lg mb-2">Bank Transfer (Bank BRI)</p>
                       <p className="text-[#a68b5a] text-2xl font-bold mb-2 tracking-widest">555301007257533</p>
                       <p className="text-sm text-[#6b6b6b]">a.n Rizki Rahma Kurnia</p>
@@ -359,7 +344,7 @@ const App: React.FC = () => {
 
           {/* Footer */}
           <footer className="py-16 bg-[#4a4a4a] text-white text-center px-6">
-             <p className="font-cursive text-3xl mb-6">Rizki & Hinka</p>
+             <p className="font-cursive text-3xl mb-6">Kiki & Hinka</p>
              <p className="text-sm font-light tracking-widest mb-12 uppercase">Terima kasih telah menjadi bagian dari kebahagiaan kami</p>
              <div className="text-[10px] text-white/30 uppercase tracking-[0.3em]">
                 Digital Invitation Created with Love
@@ -367,6 +352,19 @@ const App: React.FC = () => {
           </footer>
         </div>
       )}
+
+      <style>{`
+        .custom-scrollbar::-webkit-scrollbar {
+          width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+          background: #f1f1f1;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+          background: #a68b5a;
+          border-radius: 10px;
+        }
+      `}</style>
     </div>
   );
 };
