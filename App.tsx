@@ -133,6 +133,7 @@ const App: React.FC = () => {
 
           <section className="py-24 bg-white/60 px-6">
             <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-20 items-center">
+              {/* GROOM PROFILE */}
               <motion.div 
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
@@ -141,11 +142,12 @@ const App: React.FC = () => {
               >
                 <div className="relative inline-block mb-10">
                   <div className="absolute -inset-6 border-2 border-dashed border-[#a68b5a]/20 rounded-full animate-[spin_20s_linear_infinite]"></div>
-                  <img 
-                    src="https://api.dicebear.com/7.x/notionists/svg?seed=Hinka&backgroundColor=fdfbf7" 
-                    className="w-64 h-64 md:w-80 md:h-80 object-cover rounded-full shadow-2xl bg-[#fdfbf7] border-8 border-white relative z-10" 
-                    alt="Hinka" 
-                  />
+                  <div className="w-64 h-64 md:w-80 md:h-80 flex items-center justify-center rounded-full shadow-2xl bg-white border-8 border-white relative z-10 overflow-hidden">
+                    <svg viewBox="0 0 24 24" className="w-40 h-40 text-[#33ccff] drop-shadow-md" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                      <circle cx="10" cy="14" r="5" />
+                      <path d="M15 9l6-6M21 3h-6M21 3v6" />
+                    </svg>
+                  </div>
                 </div>
                 <h3 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-cursive text-[#a68b5a] mb-4 whitespace-nowrap overflow-hidden text-ellipsis px-2">
                   {GROOM_NAME}
@@ -154,6 +156,7 @@ const App: React.FC = () => {
                 <p className="font-serif text-xl text-[#4a4a4a]">Bapak Yasmi & Ibu Yentimar</p>
               </motion.div>
 
+              {/* BRIDE PROFILE */}
               <motion.div 
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
@@ -162,11 +165,12 @@ const App: React.FC = () => {
               >
                 <div className="relative inline-block mb-10">
                    <div className="absolute -inset-6 border-2 border-dashed border-[#a68b5a]/20 rounded-full animate-[spin_25s_linear_infinite]"></div>
-                  <img 
-                    src="https://api.dicebear.com/7.x/notionists/svg?seed=Rizki&backgroundColor=fdfbf7" 
-                    className="w-64 h-64 md:w-80 md:h-80 object-cover rounded-full shadow-2xl bg-[#fdfbf7] border-8 border-white relative z-10" 
-                    alt="Rizki" 
-                  />
+                   <div className="w-64 h-64 md:w-80 md:h-80 flex items-center justify-center rounded-full shadow-2xl bg-white border-8 border-white relative z-10 overflow-hidden">
+                    <svg viewBox="0 0 24 24" className="w-40 h-40 text-[#ff3399] drop-shadow-md" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                      <circle cx="12" cy="9" r="6" />
+                      <path d="M12 15v7M9 19h6" />
+                    </svg>
+                  </div>
                 </div>
                 <h3 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-cursive text-[#a68b5a] mb-4 whitespace-nowrap overflow-hidden text-ellipsis px-2">
                   {BRIDE_NAME}
