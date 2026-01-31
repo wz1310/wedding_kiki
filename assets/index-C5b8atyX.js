@@ -146,4 +146,4 @@ Please change the parent <Route path="${H}"> to <Route path="${H==="/"?"*":`${H}
           background: #a68b5a;
           border-radius: 10px;
         }
-      `})]})},ag=document.getElementById("root");ag&&jb.createRoot(ag).render(z.jsx(Db.StrictMode,{children:z.jsx(eS,{basename:"/wedding_kiki",children:z.jsx(IE,{})})}));
+      `})]})},ag=document.getElementById("root");ag&&jb.createRoot(ag).render(z.jsx(Db.StrictMode,{children:z.jsx(eS,{basename:"/",children:z.jsx(IE,{})})}));
