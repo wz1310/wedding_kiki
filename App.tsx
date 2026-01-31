@@ -3,33 +3,26 @@ import React, { useState, useEffect } from 'react';
 import { Heart, MapPin, Calendar, Users, Send, MessageCircle, Star, Quote } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Countdown from './components/Countdown';
-import { geminiService } from './services/geminiService';
+import AudioPlayer from './components/AudioPlayer';
 
 const WEDDING_DATE = "2026-03-24T08:00:00";
 const BRIDE_NAME = "Rizki Rahma Kurnia, A.Md Ftr";
 const GROOM_NAME = "Hinka S.s";
 const MAPS_URL = "https://maps.app.goo.gl/FkoSv91khJDpf3ww8";
 
-// DAFTAR UCAPAN PERMANEN (Dikosongkan total agar tampilan bersih)
+// DAFTAR UCAPAN PERMANEN (Dikosongkan sesuai permintaan)
 const INITIAL_WISHES: any[] = [];
 
 const App: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [newWish, setNewWish] = useState({ name: '', message: '', status: 'Hadir' as 'Hadir' | 'Tidak Hadir' });
   const [wishes, setWishes] = useState<any[]>(INITIAL_WISHES);
-  const [aiPoem, setAiPoem] = useState<string>("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
 
   useEffect(() => {
-    // Menghapus pengambilan data dari localStorage agar benar-benar kosong sesuai permintaan
+    // Pastikan daftar ucapan kosong saat komponen dimuat
     setWishes(INITIAL_WISHES);
-
-    const fetchPoem = async () => {
-      const poem = await geminiService.generateRomanticPoem(BRIDE_NAME, GROOM_NAME);
-      setAiPoem(poem);
-    };
-    fetchPoem();
   }, []);
 
   const handleOpen = () => {
@@ -42,7 +35,7 @@ const App: React.FC = () => {
     
     setIsSubmitting(true);
     
-    // Simulasi penambahan ucapan ke state (hanya sementara di sesi ini)
+    // Simulasi penambahan ucapan ke state lokal
     setTimeout(() => {
       const wishToAdd = { ...newWish };
       setWishes([wishToAdd, ...wishes]);
@@ -66,12 +59,13 @@ const App: React.FC = () => {
       <AnimatePresence>
         {!isOpen && (
           <motion.div 
+            key="cover"
             initial={{ opacity: 1 }}
             exit={{ opacity: 0, y: -100 }}
             transition={{ duration: 1 }}
             className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-cover bg-center text-white text-center p-6"
             style={{ 
-              backgroundImage: `linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&q=80&w=1920')` 
+              backgroundImage: `linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&q=80&w=1920')` 
             }}
           >
             <motion.p 
@@ -113,13 +107,15 @@ const App: React.FC = () => {
       {/* Main Content */}
       {isOpen && (
         <div className="bg-[#fdfbf7]">
+          <AudioPlayer />
+          
           {/* Hero Section */}
           <section className="relative h-screen flex flex-col items-center justify-center overflow-hidden">
             <div className="absolute inset-0 z-0">
                <img 
                  src="https://images.unsplash.com/photo-1490750967868-88aa4486c946?auto=format&fit=crop&q=80&w=1920" 
-                 className="w-full h-full object-cover opacity-25" 
-                 alt="Flower Landscape Background" 
+                 className="w-full h-full object-cover opacity-20" 
+                 alt="Flower Background" 
                />
             </div>
             <div className="z-10 text-center px-4">
@@ -135,8 +131,10 @@ const App: React.FC = () => {
           <section className="py-20 px-6 max-w-4xl mx-auto text-center">
             <Heart className="mx-auto text-[#a68b5a] mb-6 fill-[#a68b5a]/10" size={32} />
             <div className="mb-12">
-               <p className="font-serif text-lg italic text-[#6b6b6b] leading-relaxed whitespace-pre-line px-4">
-                 {aiPoem || "Dua hati satu janji, melangkah bersama dalam naungan restu Ilahi."}
+               <p className="font-serif text-lg italic text-[#6b6b6b] leading-relaxed px-4">
+                 "Dan di antara tanda-tanda (kebesaran)-Nya ialah Dia menciptakan pasangan-pasangan untukmu dari jenismu sendiri, agar kamu cenderung dan merasa tenteram kepadanya, dan Dia menjadikan di antaramu rasa kasih dan sayang."
+                 <br />
+                 <span className="block mt-4 font-bold not-italic text-sm text-[#a68b5a]">( Ar-Rum: 21 )</span>
                </p>
             </div>
             <div className="h-[1px] w-48 bg-gradient-to-r from-transparent via-[#a68b5a] to-transparent mx-auto"></div>
@@ -156,7 +154,7 @@ const App: React.FC = () => {
                   <div className="absolute -inset-4 border border-[#a68b5a]/30 rounded-full animate-pulse"></div>
                   <img 
                     src="https://api.dicebear.com/7.x/notionists/svg?seed=Hinka&backgroundColor=fdfbf7" 
-                    className="w-64 h-64 md:w-80 md:h-80 object-cover rounded-full shadow-2xl bg-[#fdfbf7] border-4 border-white transition-all duration-500" 
+                    className="w-64 h-64 md:w-80 md:h-80 object-cover rounded-full shadow-2xl bg-[#fdfbf7] border-4 border-white" 
                     alt="Hinka" 
                   />
                 </div>
@@ -176,7 +174,7 @@ const App: React.FC = () => {
                    <div className="absolute -inset-4 border border-[#a68b5a]/30 rounded-full animate-pulse"></div>
                   <img 
                     src="https://api.dicebear.com/7.x/notionists/svg?seed=Rizki&backgroundColor=fdfbf7" 
-                    className="w-64 h-64 md:w-80 md:h-80 object-cover rounded-full shadow-2xl bg-[#fdfbf7] border-4 border-white transition-all duration-500" 
+                    className="w-64 h-64 md:w-80 md:h-80 object-cover rounded-full shadow-2xl bg-[#fdfbf7] border-4 border-white" 
                     alt="Rizki" 
                   />
                 </div>
@@ -193,7 +191,7 @@ const App: React.FC = () => {
               <h2 className="text-center text-4xl font-cursive text-[#a68b5a] mb-16">Acara Bahagia</h2>
               <div className="grid md:grid-cols-2 gap-8">
                 {/* Akad */}
-                <motion.div className="bg-white p-10 rounded-3xl shadow-xl border border-[#a68b5a]/10 text-center">
+                <div className="bg-white p-10 rounded-3xl shadow-xl border border-[#a68b5a]/10 text-center">
                   <Calendar className="mx-auto text-[#a68b5a] mb-6" size={40} />
                   <h4 className="text-2xl font-serif font-bold text-[#4a4a4a] mb-4">Akad Nikah</h4>
                   <p className="text-[#6b6b6b] mb-2">Selasa, 24 Maret 2026</p>
@@ -205,10 +203,10 @@ const App: React.FC = () => {
                   <a href={MAPS_URL} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 bg-[#a68b5a] text-white px-6 py-2 rounded-full hover:bg-[#8e764d] transition-colors shadow-md">
                     <MapPin size={16} /> Buka Peta
                   </a>
-                </motion.div>
+                </div>
 
                 {/* Resepsi */}
-                <motion.div className="bg-white p-10 rounded-3xl shadow-xl border border-[#a68b5a]/10 text-center">
+                <div className="bg-white p-10 rounded-3xl shadow-xl border border-[#a68b5a]/10 text-center">
                   <Users className="mx-auto text-[#a68b5a] mb-6" size={40} />
                   <h4 className="text-2xl font-serif font-bold text-[#4a4a4a] mb-4">Resepsi</h4>
                   <p className="text-[#6b6b6b] mb-2">Selasa, 24 Maret 2026</p>
@@ -220,7 +218,7 @@ const App: React.FC = () => {
                   <a href={MAPS_URL} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 bg-[#a68b5a] text-white px-6 py-2 rounded-full hover:bg-[#8e764d] transition-colors shadow-md">
                     <MapPin size={16} /> Buka Peta
                   </a>
-                </motion.div>
+                </div>
               </div>
             </div>
           </section>
@@ -235,7 +233,6 @@ const App: React.FC = () => {
               </div>
 
               <div className="grid md:grid-cols-5 gap-12">
-                {/* Form area */}
                 <div className="md:col-span-2">
                   <form onSubmit={submitWish} className="bg-[#fdfbf7] p-6 rounded-3xl shadow-inner sticky top-24 border border-[#a68b5a]/10">
                     <div className="mb-4">
@@ -283,7 +280,6 @@ const App: React.FC = () => {
                   </form>
                 </div>
 
-                {/* List area (Dinding Ucapan) */}
                 <div className="md:col-span-3">
                   <div className="max-h-[500px] overflow-y-auto pr-4 custom-scrollbar">
                     {wishes.length > 0 ? (
