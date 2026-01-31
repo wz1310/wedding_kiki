@@ -64,7 +64,7 @@ const AudioPlayer: React.FC = () => {
         Browser Anda tidak mendukung elemen audio.
       </audio>
 
-      <button
+      {/* <button
         onClick={togglePlay}
         className={`w-12 h-12 rounded-full flex items-center justify-center shadow-lg transition-all duration-300 transform hover:scale-110 ${
           isPlaying ? 'bg-[#a68b5a] text-white animate-pulse' : 'bg-white text-[#a68b5a] border border-[#a68b5a]'
@@ -72,7 +72,7 @@ const AudioPlayer: React.FC = () => {
         aria-label={isPlaying ? "Pause Music" : "Play Music"}
       >
         {isPlaying ? <Pause size={20} /> : <Music size={20} className={!isPlaying ? "animate-bounce" : ""} />}
-      </button>
+      </button> */}
     </div>
   );
 };
