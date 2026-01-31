@@ -41,35 +41,6 @@ const itemVariants: Variants = {
   },
 };
 
-// Variants khusus untuk bunga yang muncul lalu menghilang di section profil
-const flowerLeftVariants: Variants = {
-  hidden: { x: -150, opacity: 0, rotate: -45 },
-  visible: {
-    x: -20,
-    opacity: [0, 0.7, 0.7, 0], // Muncul, diam, lalu hilang
-    rotate: 0,
-    transition: {
-      duration: 4,
-      times: [0, 0.2, 0.8, 1],
-      ease: "easeInOut",
-    },
-  },
-};
-
-const flowerRightVariants: Variants = {
-  hidden: { x: 150, opacity: 0, rotate: 45 },
-  visible: {
-    x: 20,
-    opacity: [0, 0.7, 0.7, 0],
-    rotate: 0,
-    transition: {
-      duration: 4,
-      times: [0, 0.2, 0.8, 1],
-      ease: "easeInOut",
-    },
-  },
-};
-
 const App: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [newWish, setNewWish] = useState({
@@ -258,38 +229,8 @@ const App: React.FC = () => {
               <div className="h-[1px] w-64 bg-gradient-to-r from-transparent via-[#a68b5a] to-transparent mx-auto"></div>
             </section>
 
-            {/* SECTION PROFIL DENGAN ANIMASI BUNGA (TANPA AUDIO PLAYER) */}
+            {/* SECTION PROFIL (Animasi bunga telah dihapus) */}
             <section className="py-24 bg-white/60 px-6 relative overflow-hidden">
-              {/* Dekorasi Bunga Kiri */}
-              <motion.div
-                variants={flowerLeftVariants}
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: false, amount: 0.3 }}
-                className="absolute left-0 top-1/4 w-40 md:w-64 z-0 pointer-events-none"
-              >
-                <img
-                  src="https://images.unsplash.com/photo-1533616688419-b7a585564566?q=80&w=600&auto=format&fit=crop"
-                  alt="Floral Decoration Left"
-                  className="w-full h-auto opacity-80 mix-blend-multiply"
-                />
-              </motion.div>
-
-              {/* Dekorasi Bunga Kanan */}
-              <motion.div
-                variants={flowerRightVariants}
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: false, amount: 0.3 }}
-                className="absolute right-0 bottom-1/4 w-40 md:w-64 z-0 pointer-events-none"
-              >
-                <img
-                  src="https://images.unsplash.com/photo-1507290439931-a861b5a38200?q=80&w=600&auto=format&fit=crop"
-                  alt="Floral Decoration Right"
-                  className="w-full h-auto opacity-80 mix-blend-multiply"
-                />
-              </motion.div>
-
               <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-20 items-center relative z-10">
                 {/* GROOM PROFILE */}
                 <motion.div
