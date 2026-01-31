@@ -1,20 +1,23 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
 
-# Run and deploy your AI Studio app
+# Undangan Digital Kiki & Hinka
 
-This contains everything you need to run your app locally.
+Aplikasi ini dibangun menggunakan React + TypeScript + Vite.
 
-View your app in AI Studio: https://ai.studio/apps/drive/1QHNZ48ntdvUedNA9YHMyd6mYo_XoqUqg
+## Cara Menjalankan di Lokal
 
-## Run Locally
+1. **Install Node.js** (jika belum punya) dari [nodejs.org](https://nodejs.org/).
+2. **Download/Extract** semua file ke dalam satu folder.
+3. Buka terminal atau Command Prompt (CMD) di dalam folder tersebut.
+4. Jalankan perintah:
+   ```bash
+   npm install
+   ```
+5. Setelah selesai, jalankan perintah:
+   ```bash
+   npm run dev
+   ```
+6. Buka browser dan masukkan alamat: `http://localhost:5173`
 
-**Prerequisites:**  Node.js
-
-
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+## Masalah Umum (Blank Putih)
+- Jangan membuka file `index.html` langsung dengan double-click. Harus melalui `npm run dev`.
+- Jika menggunakan VS Code, Anda juga bisa menggunakan extension **Live Preview** atau **Live Server**, tapi cara terbaik adalah menggunakan Vite di atas.
